@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
     QTimer *timer;
     int timerID;
     int STATE_SERIAL;
+    float distance_his[10];
 
 public:
     explicit MainWindow(QWidget *parent = 0);

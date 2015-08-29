@@ -7,6 +7,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     STATE_SERIAL = -1;
+    for (int i=0; i<10; i++) {
+        distance_his[i] = 0;
+    }
     initControls();
 
 }
@@ -72,12 +75,27 @@ void MainWindow::displayValue()
 {
     // 接收串口数据
     QByteArray ba;
+    QString show_dis;
+    float distance_sum = 0;
     ba = serial->readAll();
     ba = ba.left(5);
     float distance = ba.toFloat();
     distance = 0.026716*distance - 186.6173;
-    QString show_dis;
-    show_dis = QString::number(distance) + "mm";
+    for (int i=0; i<9; i++) {
+        distance_his[i] = distance_his[i+1];
+    }
+    distance_his[9] = distance;
+    for (int i=0; i<10; i++) {
+        distance_sum += distance_his[i];
+    }
+    distance = distance_sum / 10;
+    show_dis = QString::number(distance);
+    if (distance < 100) {
+        show_dis = show_dis.left(5);
+    } else {
+        show_dis = show_dis.left(6);
+    }
+    show_dis = show_dis + "mm";
 
     //设置lab_dis的字体和颜色
     QPalette pa;
